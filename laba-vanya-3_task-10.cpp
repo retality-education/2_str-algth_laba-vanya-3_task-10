@@ -1,20 +1,49 @@
-﻿// laba-vanya-3_task-10.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
+﻿// Функция для проверки чередования гласных и согласных
+#include "Trie_Tree.h"
+// Функция для проверки чередования гласных и согласных
+bool is_alternating(const std::string& word) {
+    if (word.empty()) return false;
 
-#include <iostream>
+    bool prev_is_vowel = (std::string("aeiou").find(tolower(word[0])) != std::string::npos);
 
-int main()
-{
-    std::cout << "Hello World!\n";
+    for (size_t i = 1; i < word.size(); ++i) {
+        bool is_vowel = (std::string("aeiou").find(tolower(word[i])) != std::string::npos);
+
+        // Если текущий тип совпадает с предыдущим, не чередуется
+        if (prev_is_vowel == is_vowel) {
+            return false;
+        }
+
+        prev_is_vowel = is_vowel; // Обновляем предыдущий тип
+    }
+
+    return true; // Если все символы чередуются
 }
 
-// Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
-// Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
+// Функция для печати слов с чередующимися гласными и согласными
+void print_alternating_words(ttree::ptrNODE t, std::string word) {
+    if (t->eow && is_alternating(word)) {
+        std::cout << word << std::endl;
+    }
 
-// Советы по началу работы 
-//   1. В окне обозревателя решений можно добавлять файлы и управлять ими.
-//   2. В окне Team Explorer можно подключиться к системе управления версиями.
-//   3. В окне "Выходные данные" можно просматривать выходные данные сборки и другие сообщения.
-//   4. В окне "Список ошибок" можно просматривать ошибки.
-//   5. Последовательно выберите пункты меню "Проект" > "Добавить новый элемент", чтобы создать файлы кода, или "Проект" > "Добавить существующий элемент", чтобы добавить в проект существующие файлы кода.
-//   6. Чтобы снова открыть этот проект позже, выберите пункты меню "Файл" > "Открыть" > "Проект" и выберите SLN-файл.
+    for (int i = 0; i < 26; i++) {
+        if (t->ptrs[i]) {
+            print_alternating_words(t->ptrs[i], word + char(i + 'a'));
+        }
+    }
+}
+
+void print_alternating_vowels_consonants(ttree::ptrNODE root) {
+    print_alternating_words(root, "");
+}
+
+// Пример использования
+int main() {
+    const char* filename = "words.txt"; // Укажите имя файла со словами
+    ttree::TTREE trie("data.txt");
+
+    std::cout << "Слова с чередующимися гласными и согласными:\n";
+    print_alternating_vowels_consonants(trie.get_root());
+
+    return 0;
+}

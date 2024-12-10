@@ -1,5 +1,6 @@
 ﻿// Функция для проверки чередования гласных и согласных
 #include "Trie_Tree.h"
+#include <Windows.h>
 // Функция для проверки чередования гласных и согласных
 bool is_alternating(const std::string& word) {
     if (word.empty()) return false;
@@ -39,7 +40,8 @@ void print_alternating_vowels_consonants(ttree::ptrNODE root) {
 
 // Пример использования
 int main() {
-    const char* filename = "words.txt"; // Укажите имя файла со словами
+    SetConsoleOutputCP(1251);
+
     ttree::TTREE trie("data.txt");
 
     std::cout << "Слова с чередующимися гласными и согласными:\n";
